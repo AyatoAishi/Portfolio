@@ -1,0 +1,487 @@
+---
+import Base from '../layouts/Base.astro';
+import content from '../data/content.json';
+
+const { name, role, hero, offer, about, tool, contact, clips, clipsSection, captionStyles, motion, motionSection } = content;
+
+// Seeded, not Math.random(). Astro renders this once at build time, so a
+// real random would reshuffle the markup on every rebuild and churn the
+// diff for no reason. Same seed = same falling frames every time.
+let seed = 20260920;
+const rnd = () => {
+  seed = (seed * 1664525 + 1013904223) % 4294967296;
+  return seed / 4294967296;
+};
+
+const makeFall = (n: number) =>
+  Array.from({ length: n }, () => {
+    const size = Math.round(4 + rnd() * 15);
+    return {
+      size,
+      left: Math.round(rnd() * 86),
+      dur: (7 + rnd() * 12).toFixed(1),
+      delay: (rnd() * -18).toFixed(1),   // negative = already mid-fall on load
+      op: (0.05 + rnd() * 0.38).toFixed(2),
+      dx: Math.round(-26 + rnd() * 52),
+      rot: Math.round(-200 + rnd() * 400),
+      dot: rnd() > 0.74,
+    };
+  });
+
+const fallL = makeFall(16);
+const fallR = makeFall(16);
+
+const emptyCount = clips.filter((c) => !c.youtubeId).length;
+const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !== 'spec').length;
+---
+
+<Base
+  title={`${name} - ${role}`}
+  description="Vertical podcast clips cut for retention. Send the raw episode, get clips ready to post."
+>
+  <!-- ============================================================
+       1. HERO - the pitch video. Autoplays muted, pauses off-screen.
+       ============================================================ -->
+  <header class="hero">
+    <div class="hero-media">
+      <video
+        id="heroVideo"
+        poster={hero.video.poster}
+        muted
+        loop
+        playsinline
+        autoplay
+        preload="metadata"
+        disablepictureinpicture
+        aria-label="Showreel: why you should hire me"
+      >
+        <source src={hero.video.mobile} media="(max-width: 767px)" type="video/mp4" />
+        <source src={hero.video.desktop} type="video/mp4" />
+      </video>
+
+      <div class="hero-vig"></div>
+
+      <button id="soundBtn" class="sound" type="button" data-on="off" aria-pressed="false">
+        <svg data-icon="off" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 5 6 9H2v6h4l5 4z" />
+          <line x1="23" y1="9" x2="17" y2="15" />
+          <line x1="17" y1="9" x2="23" y2="15" />
+        </svg>
+        <svg data-icon="on" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 5 6 9H2v6h4l5 4z" />
+          <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+          <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+        </svg>
+        <span class="sound-label">Sound off</span>
+      </button>
+    </div>
+
+    <div class="hero-intro">
+      <p class="hero-kicker">{hero.kicker}</p>
+      <h1 class="hero-name">{hero.name}</h1>
+      <p class="hero-lede">{hero.lede}</p>
+      <div class="hero-actions">
+        <a class="btn on-dark" href={hero.ctaHref}>{hero.cta} &rarr;</a>
+        <span class="tool-badge">
+          <img src={tool.icon} alt="" width="19" height="19" loading="lazy" decoding="async" />
+          {tool.name} <em>{tool.note}</em>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       2. OFFER - the hard cut. Black to white, no fade.
+       ============================================================ -->
+  <section class="offer">
+    {[fallL, fallR].map((col, ci) => (
+      <div class={`fall ${ci === 0 ? 'fall-l' : 'fall-r'}`} aria-hidden="true">
+        {col.map((p) => (
+          <i
+            class={p.dot ? 'dot' : ''}
+            style={`width:${p.size}px;height:${p.size}px;left:${p.left}%;animation-duration:${p.dur}s;animation-delay:${p.delay}s;--o:${p.op};--dx:${p.dx}px;--rot:${p.rot}deg`}
+          />
+        ))}
+      </div>
+    ))}
+
+    <div class="wrap">
+      <h1>{offer.headline}</h1>
+      <p>{offer.sub}</p>
+      <a class="btn" href={offer.ctaHref}>{offer.cta} &rarr;</a>
+
+      <div class="about">
+        <p class="about-eyebrow">{about.eyebrow}</p>
+        <p class="about-lead">{about.lead}</p>
+        <p class="about-body">{about.body}</p>
+        <div class="about-row">
+          <span class="tool-badge is-paper">
+            <img src={tool.icon} alt="" width="19" height="19" loading="lazy" decoding="async" />
+            {tool.name}
+          </span>
+          {about.skills.map((s) => <span class="chip">{s}</span>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. CLIP GRID - metrics are the argument, not decoration.
+       ============================================================ -->
+  <section class="sec" id="clips">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">{clipsSection.eyebrow}</p>
+        <h2>{clipsSection.heading}</h2>
+        <p>{clipsSection.sub}</p>
+      </div>
+
+      <div class="grid">
+        {clips.map((c) => (
+          <article
+            class="tile"
+            style={`--h: ${c.hue}`}
+            tabindex="0"
+            role={c.youtubeId ? 'button' : undefined}
+            data-yt={c.youtubeId || undefined}
+            data-title={c.title}
+            data-metric={c.metric}
+            data-metric-label={c.metricLabel}
+            data-retention={c.retention}
+          >
+            {c.youtubeId ? (
+              <>
+                {/* maxresdefault is 16:9 with the 9:16 frame pillarboxed centre;
+                    object-fit:cover crops to exactly that column. */}
+                <img
+                  class="tile-poster"
+                  src={`https://i.ytimg.com/vi/${c.youtubeId}/maxresdefault.jpg`}
+                  alt={c.title}
+                  loading="lazy"
+                  decoding="async"
+                  width="540"
+                  height="960"
+                  onerror={`this.onerror=null;this.src='https://i.ytimg.com/vi/${c.youtubeId}/hqdefault.jpg'`}
+                />
+                <span class="tile-play" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                </span>
+                {c.kind === 'spec' && <span class="spec-chip">SPEC</span>}
+              </>
+            ) : (
+              <>
+                <div class="ph" style={`--h: ${c.hue}`}></div>
+                <span class="ph-chip">PLACEHOLDER</span>
+              </>
+            )}
+
+            <span class="tile-plat">{c.platform}</span>
+            <div class="tile-scrim"></div>
+            <div class="tile-meta">
+              <p class="tile-title">{c.title}</p>
+              {/* A spec piece was cut to show craft, not posted for reach.
+                  Showing "n/a views" on one invites the wrong comparison, so
+                  it states what it is instead. */}
+              {c.kind === 'spec' && !c.metric ? (
+                <div class="tile-nums is-spec">
+                  <b>Spec cut</b>
+                  <span>&middot;</span>
+                  <span>{c.show}</span>
+                </div>
+              ) : (
+                <div class="tile-nums">
+                  <b>{c.metric || 'n/a'}</b>
+                  <span>{c.metricLabel}</span>
+                  <span>&middot;</span>
+                  <span>{c.retention || 'n/a'} held</span>
+                </div>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {(emptyCount > 0 || missingMetrics > 0) && (
+        <p class="note">
+          <b>{emptyCount} of {clips.length} tiles have no video yet.</b>
+          {' '}Paste the 11-character YouTube id into <code>youtubeId</code> in
+          <code>src/data/content.json</code>. Take it from
+          <code>youtube.com/shorts/<b>ID</b></code> or
+          <code>watch?v=<b>ID</b></code>. The poster is pulled from YouTube
+          automatically, so there is nothing to upload.
+          {missingMetrics > 0 && (
+            <> {missingMetrics} tile(s) have a video but no numbers. A tile
+            without a metric is decoration.</>
+          )}
+        </p>
+      )}
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. CAPTION STYLES - what clients actually pick between.
+       ============================================================ -->
+  <section class="sec" id="captions">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">02 / Caption styles</p>
+        <h2>Pick a look</h2>
+        <p>The caption treatment is the part clients have opinions about. Here are the four I cut in.</p>
+      </div>
+
+      <div class="caps">
+        {captionStyles.map((s, i) => (
+          <div class="cap">
+            <div class="cap-stage" style={`--h: ${[150, 30, 220, 300][i]}`}>
+              {s.style === 'karaoke' && (
+                <p class="s-karaoke">
+                  {s.sample.map((w, wi) => (
+                    <><i class={wi === 2 ? 'on' : ''}>{w}</i>{' '}</>
+                  ))}
+                </p>
+              )}
+              {s.style === 'block' && (
+                <p class="s-block">{s.sample[0]}<br />{s.sample[1]}</p>
+              )}
+              {s.style === 'clean' && <p class="s-clean">{s.sample[0]}</p>}
+              {s.style === 'emphasis' && (
+                <p class="s-emphasis">{s.sample[0]}<b>{s.sample[1]}</b></p>
+              )}
+            </div>
+            <div class="cap-foot">
+              <b>{s.name}</b>
+              <span>{s.note}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. MOTION - range, below the fold, visibly secondary.
+       ============================================================ -->
+  <section class="sec" id="motion">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">{motionSection.eyebrow}</p>
+        <h2>{motionSection.heading}</h2>
+        <p>{motionSection.sub}</p>
+      </div>
+
+      <div class={`mg ${motion.length < 3 ? 'is-few' : ''}`} data-count={String(motion.length)}>
+        {motion.map((m) => (
+          <div
+            class={`mg-item ${m.note ? 'has-note' : ''}`}
+            style={`--h: ${m.hue}`}
+            data-yt={m.youtubeId || undefined}
+            data-title={m.title}
+            data-aspect="16/9"
+            tabindex={m.youtubeId ? '0' : undefined}
+            role={m.youtubeId ? 'button' : undefined}
+          >
+            {m.youtubeId && (
+              <>
+                {/* Natively landscape, so no pillarbox to crop: a 16:9
+                    thumbnail fills a 16:9 tile exactly. */}
+                <img
+                  class="mg-poster"
+                  src={`https://i.ytimg.com/vi/${m.youtubeId}/maxresdefault.jpg`}
+                  alt={m.title}
+                  loading="lazy"
+                  decoding="async"
+                  width="1280"
+                  height="720"
+                  onerror={`this.onerror=null;this.src='https://i.ytimg.com/vi/${m.youtubeId}/hqdefault.jpg'`}
+                />
+                <span class="mg-play" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                </span>
+                <div class="mg-scrim"></div>
+              </>
+            )}
+            <span>{m.title}</span>
+            {m.note && <em>{m.note}</em>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER - the contact details live here, at the very bottom.
+       ============================================================ -->
+  <footer class="site-foot" id="contact">
+    <div class="wrap">
+      <div class="contact">
+        <div class="contact-item">
+          <b>Email</b>
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        </div>
+        <div class="contact-item">
+          <b>Phone</b>
+          <a href={contact.phoneHref}>{contact.phone}</a>
+        </div>
+        <div class="contact-item">
+          <b>Also posting on</b>
+          <div class="contact-socials">
+            {contact.socials.map((s) => (
+              <a href={s.href} target="_blank" rel="noopener noreferrer">
+                {s.label} {s.handle}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span>{name} &middot; {role}</span>
+        <span>Local build &middot; not deployed</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox. The iframe is created on open and destroyed on close,
+       which is also what stops playback - there is no other reliable
+       way to halt a YouTube embed without loading their API. -->
+  <div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Clip player" hidden>
+    <div class="lb-inner">
+      <button class="lb-close" id="lbClose" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="lb-frame" id="lbFrame"></div>
+      <div class="lb-meta">
+        <b id="lbTitle"></b>
+        <span class="lb-nums" id="lbNums"></span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <a href="#clips">Clips</a>
+    <a href="#captions">Captions</a>
+    <a href="#motion">Motion</a>
+    <a class="is-cta" href="#contact">Contact</a>
+  </nav>
+
+  <script>
+    const video = document.getElementById('heroVideo') as HTMLVideoElement | null;
+    const btn = document.getElementById('soundBtn');
+
+    if (video && btn) {
+      const label = btn.querySelector('.sound-label');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let onScreen = true;
+
+      // play() rejects when the tab is backgrounded or a policy blocks it.
+      // Swallowing it keeps the poster up instead of throwing to the console.
+      const tryPlay = () => { video.play()?.catch(() => {}); };
+
+      // Only decode while the hero is actually on screen. A 20s loop running
+      // behind four screens of scroll is pure battery and CPU for nothing.
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            onScreen = entry.isIntersecting;
+            if (onScreen && !reduceMotion && !document.hidden) tryPlay();
+            else video.pause();
+          }
+        },
+        { threshold: 0.25 }
+      );
+      io.observe(video);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) video.pause();
+        else if (onScreen && !reduceMotion) tryPlay();
+      });
+
+      const sync = () => {
+        const on = !video.muted;
+        btn.dataset.on = on ? 'on' : 'off';
+        btn.setAttribute('aria-pressed', String(on));
+        if (label) label.textContent = on ? 'Sound on' : 'Sound off';
+      };
+
+      btn.addEventListener('click', () => {
+        video.muted = !video.muted;
+        if (!video.muted) tryPlay();
+        sync();
+      });
+
+      sync();
+      if (!reduceMotion) tryPlay();
+    }
+
+    /* ---------------- Lightbox (facade -> real iframe on click) -------- */
+    const lb = document.getElementById('lightbox');
+    const lbFrame = document.getElementById('lbFrame');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbNums = document.getElementById('lbNums');
+    const lbClose = document.getElementById('lbClose');
+    const lbInner = lb?.querySelector('.lb-inner');
+    let lastFocused: HTMLElement | null = null;
+
+    const closeLightbox = () => {
+      if (!lb || !lbFrame) return;
+      lb.classList.remove('is-open');
+      lb.hidden = true;
+      document.body.classList.remove('lb-locked');
+      // Removing the iframe is what actually stops playback.
+      lbFrame.innerHTML = '';
+      lastFocused?.focus();
+    };
+
+    const openLightbox = (tile: HTMLElement) => {
+      const id = tile.dataset.yt;
+      if (!id || !lb || !lbFrame) return;
+      lastFocused = tile;
+
+      const iframe = document.createElement('iframe');
+      // nocookie host, and no YouTube JS loads until this moment.
+      iframe.src =
+        'https://www.youtube-nocookie.com/embed/' + id +
+        '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.title = tile.dataset.title || 'Clip';
+      lbFrame.replaceChildren(iframe);
+
+      // 9:16 by default; landscape pieces widen the shell and flip the frame.
+      const wide = tile.dataset.aspect === '16/9';
+      lbFrame.classList.toggle('is-wide', wide);
+      lbInner?.classList.toggle('is-wide', wide);
+
+      if (lbTitle) lbTitle.textContent = tile.dataset.title || '';
+      if (lbNums) {
+        const m = tile.dataset.metric;
+        const r = tile.dataset.retention;
+        lbNums.textContent = m
+          ? `${m} ${tile.dataset.metricLabel || ''}${r ? ' · ' + r + ' held' : ''}`
+          : '';
+      }
+
+      lb.hidden = false;
+      lb.classList.add('is-open');
+      document.body.classList.add('lb-locked');
+      lbClose?.focus();
+    };
+
+    document.querySelectorAll<HTMLElement>('[data-yt]').forEach((tile) => {
+      tile.addEventListener('click', () => openLightbox(tile));
+      tile.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(tile); }
+      });
+    });
+
+    lbClose?.addEventListener('click', closeLightbox);
+    lb?.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lb && !lb.hidden) closeLightbox();
+    });
+  </script>
+</Base>

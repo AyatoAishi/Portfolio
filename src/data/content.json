@@ -1,0 +1,201 @@
+{
+  "name": "Tamara",
+  "role": "Podcast clips, cut for retention",
+  "hero": {
+    "kicker": "Video editor",
+    "name": "Tamara",
+    "lede": "I cut long podcast episodes into vertical clips built to hold attention past the three-second mark. Twenty seconds on why that might be worth your time. Sound optional.",
+    "cta": "See the work",
+    "ctaHref": "#clips",
+    "video": {
+      "desktop": "/hero-1080.mp4",
+      "mobile": "/hero-720.mp4",
+      "poster": "/hero-poster.webp"
+    }
+  },
+  "offer": {
+    "headline": "I turn your episodes into clips that get watched.",
+    "sub": "Send me the raw episode. Get back vertical clips that hold attention past the three-second mark: hooked, captioned, and ready to post.",
+    "cta": "Contact me",
+    "ctaHref": "mailto:geibrielle.actub@gmail.com"
+  },
+  "_placeholderNote": "Clips are hosted on YouTube. The site stores no clip video. Fill youtubeId (the 11-char id from the watch/shorts URL) plus metric and retention from your analytics. A clip with an empty youtubeId renders a PLACEHOLDER tile. Never ship invented metrics.",
+  "clips": [
+    {
+      "id": "c1",
+      "title": "Vaping might be worse than smoking",
+      "show": "Podcast",
+      "platform": "Shorts",
+      "youtubeId": "IRMpgDslDvI",
+      "kind": "spec",
+      "metric": "",
+      "metricLabel": "views",
+      "retention": "",
+      "hue": 210
+    },
+    {
+      "id": "c2",
+      "title": "1000 days without alcohol",
+      "show": "Podcast",
+      "platform": "Shorts",
+      "youtubeId": "RjsyrbWmit0",
+      "kind": "spec",
+      "metric": "",
+      "metricLabel": "views",
+      "retention": "",
+      "hue": 275
+    },
+    {
+      "id": "c3",
+      "title": "Carbs are not the enemy",
+      "show": "Fitness",
+      "platform": "Shorts",
+      "youtubeId": "B6giZz-W_E4",
+      "kind": "spec",
+      "metric": "",
+      "metricLabel": "views",
+      "retention": "",
+      "hue": 150
+    }
+  ],
+  "captionStyles": [
+    {
+      "id": "s1",
+      "name": "Karaoke",
+      "note": "Word lights up on the beat. Highest retention, busiest look.",
+      "style": "karaoke",
+      "sample": [
+        "this",
+        "is",
+        "the",
+        "part"
+      ]
+    },
+    {
+      "id": "s2",
+      "name": "Block",
+      "note": "Two words, heavy weight, hard cuts. Reads fast on a phone.",
+      "style": "block",
+      "sample": [
+        "THE",
+        "PART"
+      ]
+    },
+    {
+      "id": "s3",
+      "name": "Clean",
+      "note": "One line, bottom third. For shows that want less noise.",
+      "style": "clean",
+      "sample": [
+        "this is the part"
+      ]
+    },
+    {
+      "id": "s4",
+      "name": "Emphasis",
+      "note": "Neutral line, one word punched. Points without shouting.",
+      "style": "emphasis",
+      "sample": [
+        "this is the",
+        "PART"
+      ]
+    }
+  ],
+  "motion": [
+    {
+      "id": "m1",
+      "title": "Lyric typography",
+      "note": "Landscape",
+      "youtubeId": "W3jUJgzcqIE",
+      "hue": 355
+    },
+    {
+      "id": "m2",
+      "title": "CTA over live footage",
+      "note": "Landscape",
+      "youtubeId": "sLmyvQUswjE",
+      "hue": 200
+    },
+    {
+      "id": "m3",
+      "title": "UI icon animation",
+      "note": "Landscape",
+      "youtubeId": "IBYoMFpbJ7U",
+      "hue": 15
+    },
+    {
+      "id": "m4",
+      "title": "Typography edit",
+      "note": "Landscape",
+      "youtubeId": "0psZsadCS58",
+      "hue": 0
+    },
+    {
+      "id": "m5",
+      "title": "UI interaction",
+      "note": "Landscape",
+      "youtubeId": "Zt1xeOv3Zx4",
+      "hue": 20
+    },
+    {
+      "id": "m6",
+      "title": "Callout graphics",
+      "note": "Landscape",
+      "youtubeId": "6F6Lt_deqpg",
+      "hue": 250
+    }
+  ],
+  "contact": {
+    "email": "geibrielle.actub@gmail.com",
+    "phone": "0992 658 0496",
+    "phoneHref": "tel:+639926580496",
+    "socials": [
+      {
+        "label": "TikTok",
+        "handle": "@tamara.xyz1",
+        "href": "https://www.tiktok.com/@tamara.xyz1"
+      },
+      {
+        "label": "Instagram",
+        "handle": "@hsh.tamara",
+        "href": "https://www.instagram.com/hsh.tamara/"
+      }
+    ]
+  },
+  "_unusedByPage": {
+    "note": "Not rendered. Kept as reusable copy for outreach emails.",
+    "intake": [
+      "Send the raw episode. Video or audio, any format.",
+      "Tell me the show, the audience, and where you post.",
+      "I pick the moments and send clips for review.",
+      "One round of changes included."
+    ]
+  },
+  "tool": {
+    "name": "DaVinci Resolve",
+    "icon": "/resolve.webp",
+    "note": "1.5 years"
+  },
+  "about": {
+    "eyebrow": "Who you are hiring",
+    "lead": "A year and a half in DaVinci Resolve, self-taught.",
+    "body": "My focus is short-form vertical storytelling, cuts built to hold attention from the first frame. I also build motion graphics for landscape, and cut montages and speed ramps when a piece calls for it.",
+    "skills": [
+      "Short-form vertical",
+      "Storytelling",
+      "Motion graphics",
+      "Montage",
+      "Speed ramps"
+    ]
+  },
+  "clipsSection": {
+    "eyebrow": "01 / Short-form vertical",
+    "heading": "The work",
+    "sub": "Talking-head and long-form content cut down to vertical. Every tile says what it is and what it did."
+  },
+  "motionSection": {
+    "eyebrow": "03 / Also",
+    "heading": "Motion graphics",
+    "sub": "Not the main offer. Here so you know the ceiling if your show needs titles, lower thirds or a sting."
+  }
+}
