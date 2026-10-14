@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import content from '../data/content.json';
 
-const { name, role, hero, offer, about, tool, contact, clips, clipsSection, captionStyles, motion, motionSection } = content;
+const { name, role, hero, offer, about, tool, contact, clips, clipsSection, motion, motionSection } = content;
 
 // Seeded, not Math.random(). Astro renders this once at build time, so a
 // real random would reshuffle the markup on every rebuild and churn the
@@ -221,46 +221,6 @@ const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !=
   </section>
 
   <!-- ============================================================
-       4. CAPTION STYLES - what clients actually pick between.
-       ============================================================ -->
-  <section class="sec" id="captions">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="eyebrow">02 / Caption styles</p>
-        <h2>Pick a look</h2>
-        <p>The caption treatment is the part clients have opinions about. Here are the four I cut in.</p>
-      </div>
-
-      <div class="caps">
-        {captionStyles.map((s, i) => (
-          <div class="cap">
-            <div class="cap-stage" style={`--h: ${[150, 30, 220, 300][i]}`}>
-              {s.style === 'karaoke' && (
-                <p class="s-karaoke">
-                  {s.sample.map((w, wi) => (
-                    <><i class={wi === 2 ? 'on' : ''}>{w}</i>{' '}</>
-                  ))}
-                </p>
-              )}
-              {s.style === 'block' && (
-                <p class="s-block">{s.sample[0]}<br />{s.sample[1]}</p>
-              )}
-              {s.style === 'clean' && <p class="s-clean">{s.sample[0]}</p>}
-              {s.style === 'emphasis' && (
-                <p class="s-emphasis">{s.sample[0]}<b>{s.sample[1]}</b></p>
-              )}
-            </div>
-            <div class="cap-foot">
-              <b>{s.name}</b>
-              <span>{s.note}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
        5. MOTION - range, below the fold, visibly secondary.
        ============================================================ -->
   <section class="sec" id="motion">
@@ -363,7 +323,6 @@ const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !=
 
   <nav class="nav">
     <a href="#clips">Clips</a>
-    <a href="#captions">Captions</a>
     <a href="#motion">Motion</a>
     <a class="is-cta" href="#contact">Contact</a>
   </nav>

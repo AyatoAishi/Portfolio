@@ -58,49 +58,6 @@
       "hue": 150
     }
   ],
-  "captionStyles": [
-    {
-      "id": "s1",
-      "name": "Karaoke",
-      "note": "Word lights up on the beat. Highest retention, busiest look.",
-      "style": "karaoke",
-      "sample": [
-        "this",
-        "is",
-        "the",
-        "part"
-      ]
-    },
-    {
-      "id": "s2",
-      "name": "Block",
-      "note": "Two words, heavy weight, hard cuts. Reads fast on a phone.",
-      "style": "block",
-      "sample": [
-        "THE",
-        "PART"
-      ]
-    },
-    {
-      "id": "s3",
-      "name": "Clean",
-      "note": "One line, bottom third. For shows that want less noise.",
-      "style": "clean",
-      "sample": [
-        "this is the part"
-      ]
-    },
-    {
-      "id": "s4",
-      "name": "Emphasis",
-      "note": "Neutral line, one word punched. Points without shouting.",
-      "style": "emphasis",
-      "sample": [
-        "this is the",
-        "PART"
-      ]
-    }
-  ],
   "motion": [
     {
       "id": "m1",
@@ -194,7 +151,7 @@
     "sub": "Talking-head and long-form content cut down to vertical. Every tile says what it is and what it did."
   },
   "motionSection": {
-    "eyebrow": "03 / Also",
+    "eyebrow": "02 / Also",
     "heading": "Motion graphics",
     "sub": "Not the main offer. Here so you know the ceiling if your show needs titles, lower thirds or a sting."
   }
