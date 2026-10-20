@@ -917,3 +917,31 @@ body.lb-locked { overflow: hidden; }
   width: 100%;
   height: auto;
 }
+
+/* Client work. The SPEC chip is deliberately neutral; this one is not,
+   because paid work that ran on someone else's channel is the strongest
+   claim on the page and should read that way. */
+.client-chip {
+  position: absolute;
+  top: 9px; left: 9px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 3px 6px;
+  border-radius: 5px;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Instagram's embed is a card: video plus header, caption and actions.
+   It is taller than the 9:16 video inside it, so it gets its own ratio
+   rather than being forced into the clip shape and cropped. */
+.lb-inner.is-ig { width: min(420px, 100%); }
+.lb-frame.is-ig {
+  aspect-ratio: 420 / 680;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  background: #fff;
+}

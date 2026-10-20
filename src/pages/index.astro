@@ -144,30 +144,37 @@ const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !=
             class="tile"
             style={`--h: ${c.hue}`}
             tabindex="0"
-            role={c.youtubeId ? 'button' : undefined}
+            role={c.youtubeId || c.instagramId ? 'button' : undefined}
             data-yt={c.youtubeId || undefined}
+            data-ig={c.instagramId || undefined}
             data-title={c.title}
             data-metric={c.metric}
             data-metric-label={c.metricLabel}
             data-retention={c.retention}
           >
-            {c.youtubeId ? (
+            {c.youtubeId || c.instagramId ? (
               <>
-                {/* maxresdefault is 16:9 with the 9:16 frame pillarboxed centre;
-                    object-fit:cover crops to exactly that column. */}
+                {/* YouTube: maxresdefault is 16:9 with the 9:16 frame
+                    pillarboxed centre, and object-fit:cover crops to exactly
+                    that column. Instagram: its CDN urls are signed and
+                    expire, so that poster is downloaded and committed
+                    instead of hotlinked. */}
                 <img
                   class="tile-poster"
-                  src={`https://i.ytimg.com/vi/${c.youtubeId}/maxresdefault.jpg`}
+                  src={c.poster || `https://i.ytimg.com/vi/${c.youtubeId}/maxresdefault.jpg`}
                   alt={c.title}
                   loading="lazy"
                   decoding="async"
                   width="540"
                   height="960"
-                  onerror={`this.onerror=null;this.src='https://i.ytimg.com/vi/${c.youtubeId}/hqdefault.jpg'`}
+                  onerror={c.youtubeId
+                    ? `this.onerror=null;this.src='https://i.ytimg.com/vi/${c.youtubeId}/hqdefault.jpg'`
+                    : undefined}
                 />
                 <span class="tile-play" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                 </span>
+                {c.kind === 'client' && <span class="client-chip">CLIENT</span>}
                 {c.kind === 'spec' && <span class="spec-chip">SPEC</span>}
               </>
             ) : (
@@ -183,7 +190,9 @@ const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !=
               <p class="tile-title">{c.title}</p>
               {/* A spec piece was cut to show craft, not posted for reach.
                   Showing "n/a views" on one invites the wrong comparison, so
-                  it states what it is instead. */}
+                  it states what it is instead. Anything with a real number
+                  shows the number, then retention if there is one and the
+                  source otherwise. */}
               {c.kind === 'spec' && !c.metric ? (
                 <div class="tile-nums is-spec">
                   <b>Spec cut</b>
@@ -195,7 +204,7 @@ const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !=
                   <b>{c.metric || 'n/a'}</b>
                   <span>{c.metricLabel}</span>
                   <span>&middot;</span>
-                  <span>{c.retention || 'n/a'} held</span>
+                  <span>{c.retention ? `${c.retention} held` : c.show}</span>
                 </div>
               )}
             </div>
@@ -396,24 +405,29 @@ const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !=
     };
 
     const openLightbox = (tile: HTMLElement) => {
-      const id = tile.dataset.yt;
-      if (!id || !lb || !lbFrame) return;
+      const ytId = tile.dataset.yt;
+      const igId = tile.dataset.ig;
+      if ((!ytId && !igId) || !lb || !lbFrame) return;
       lastFocused = tile;
 
       const iframe = document.createElement('iframe');
-      // nocookie host, and no YouTube JS loads until this moment.
-      iframe.src =
-        'https://www.youtube-nocookie.com/embed/' + id +
-        '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      // Neither provider ships a byte until this moment.
+      iframe.src = igId
+        ? 'https://www.instagram.com/p/' + igId + '/embed/'
+        : 'https://www.youtube-nocookie.com/embed/' + ytId +
+          '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
       iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
       iframe.allowFullscreen = true;
       iframe.title = tile.dataset.title || 'Clip';
       lbFrame.replaceChildren(iframe);
 
-      // 9:16 by default; landscape pieces widen the shell and flip the frame.
+      // Three shapes: 9:16 clip, 16:9 landscape, and Instagram, whose
+      // embed is a card taller than the video it contains.
       const wide = tile.dataset.aspect === '16/9';
       lbFrame.classList.toggle('is-wide', wide);
       lbInner?.classList.toggle('is-wide', wide);
+      lbFrame.classList.toggle('is-ig', !!igId);
+      lbInner?.classList.toggle('is-ig', !!igId);
 
       if (lbTitle) lbTitle.textContent = tile.dataset.title || '';
       if (lbNums) {
@@ -430,7 +444,7 @@ const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !=
       lbClose?.focus();
     };
 
-    document.querySelectorAll<HTMLElement>('[data-yt]').forEach((tile) => {
+    document.querySelectorAll<HTMLElement>('[data-yt], [data-ig]').forEach((tile) => {
       tile.addEventListener('click', () => openLightbox(tile));
       tile.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(tile); }

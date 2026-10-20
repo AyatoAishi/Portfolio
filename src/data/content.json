@@ -22,6 +22,19 @@
   "_placeholderNote": "Clips are hosted on YouTube. The site stores no clip video. Fill youtubeId (the 11-char id from the watch/shorts URL) plus metric and retention from your analytics. A clip with an empty youtubeId renders a PLACEHOLDER tile. Never ship invented metrics.",
   "clips": [
     {
+      "id": "c0",
+      "title": "Rave event promo",
+      "show": "RAW Manila",
+      "platform": "Instagram",
+      "instagramId": "DeB5qCRh5dI",
+      "poster": "/clip-raw.webp",
+      "kind": "client",
+      "metric": "416",
+      "metricLabel": "likes",
+      "retention": "",
+      "hue": 300
+    },
+    {
       "id": "c1",
       "title": "Vaping might be worse than smoking",
       "show": "Podcast",
