@@ -35,6 +35,32 @@
       "hue": 300
     },
     {
+      "id": "c0b",
+      "title": "Someone who does not care",
+      "show": "Animation",
+      "instagramId": "DeqUMVKzEwg",
+      "poster": "/clip-anim.webp",
+      "hue": 330,
+      "platform": "Instagram",
+      "kind": "spec",
+      "metric": "",
+      "metricLabel": "likes",
+      "retention": ""
+    },
+    {
+      "id": "c0c",
+      "title": "Give AI a few years",
+      "show": "Typography",
+      "instagramId": "DeDNd7wz37b",
+      "poster": "/clip-ai.webp",
+      "hue": 190,
+      "platform": "Instagram",
+      "kind": "spec",
+      "metric": "",
+      "metricLabel": "likes",
+      "retention": ""
+    },
+    {
       "id": "c1",
       "title": "Vaping might be worse than smoking",
       "show": "Podcast",
