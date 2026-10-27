@@ -95,6 +95,30 @@
       "metricLabel": "views",
       "retention": "",
       "hue": 150
+    },
+    {
+      "id": "c7",
+      "title": "Benny Blanco",
+      "show": "Podcast",
+      "youtubeId": "69BSPLUmEDA",
+      "hue": 35,
+      "platform": "Shorts",
+      "kind": "spec",
+      "metric": "",
+      "metricLabel": "views",
+      "retention": ""
+    },
+    {
+      "id": "c8",
+      "title": "Card promo animation",
+      "show": "Brand",
+      "youtubeId": "A-neY1TdGkM",
+      "hue": 175,
+      "platform": "Shorts",
+      "kind": "spec",
+      "metric": "",
+      "metricLabel": "views",
+      "retention": ""
     }
   ],
   "motion": [
