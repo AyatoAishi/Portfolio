@@ -31,8 +31,15 @@ const makeFall = (n: number) =>
 const fallL = makeFall(16);
 const fallR = makeFall(16);
 
-const emptyCount = clips.filter((c) => !c.youtubeId).length;
-const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !== 'spec').length;
+// A clip is empty only if NO provider is set. Counting youtubeId alone
+// marked the three Instagram pieces as missing.
+const hasVideo = (c: { youtubeId?: string; instagramId?: string }) => !!(c.youtubeId || c.instagramId);
+const emptyCount = clips.filter((c) => !hasVideo(c)).length;
+const missingMetrics = clips.filter((c) => hasVideo(c) && !c.metric && c.kind !== 'spec').length;
+// Authoring scaffolding. It tells Tamara where to paste an id, which is
+// meaningless to a client and reads as an unfinished site, so it is
+// gated to the dev server and can never reach the build.
+const showAuthorNote = import.meta.env.DEV && (emptyCount > 0 || missingMetrics > 0);
 ---
 
 <Base
@@ -225,7 +232,7 @@ const missingMetrics = clips.filter((c) => c.youtubeId && !c.metric && c.kind !=
         ))}
       </div>
 
-      {(emptyCount > 0 || missingMetrics > 0) && (
+      {showAuthorNote && (
         <p class="note">
           <b>{emptyCount} of {clips.length} tiles have no video yet.</b>
           {' '}Paste the 11-character YouTube id into <code>youtubeId</code> in
