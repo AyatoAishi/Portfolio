@@ -432,12 +432,60 @@ a { color: inherit; }
     radial-gradient(80% 120% at 25% 15%, hsl(var(--h) 45% 30% / .75), transparent 65%),
     linear-gradient(180deg, var(--ink-3), var(--ink-2));
 }
-.mg-item span {
+.mg-title {
   position: absolute;
+  z-index: 2;
   left: 12px; bottom: 11px;
   font-size: 12.5px;
   font-weight: 560;
   letter-spacing: -0.005em;
+}
+
+/* Timeline badge: evidence the cut is hers, sitting on the piece it
+   produced rather than as a tile of its own. A screen recording of a
+   Resolve timeline is not showreel material, but it is near impossible
+   to fake, which is the whole point of showing it. */
+.tl-badge {
+  position: absolute;
+  z-index: 3;
+  top: 9px; left: 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px 3px 5px;
+  border-radius: 999px;
+  background: rgba(10,10,11,0.72);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.9);
+  cursor: pointer;
+  transition: background .18s, border-color .18s;
+}
+/* The visible pill is only 21px tall. On a touch screen a near miss
+   opens the parent tile's video instead, which is a silent wrong answer,
+   so the tap target is padded out past the pill without moving it. */
+.tl-badge::after { content: ''; position: absolute; inset: -11px -9px; }
+.tl-badge svg { width: 11px; height: 11px; display: block; opacity: 0.85; }
+.tl-badge b {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+.tl-badge:hover,
+.tl-badge:focus-visible {
+  background: rgba(10,10,11,0.92);
+  border-color: rgba(255,255,255,0.42);
+}
+
+/* A clip tile's top-left corner already holds CLIENT/SPEC, so the badge
+   stacks beneath it. */
+.tile .tl-badge { top: 31px; }
+
+
+/* One narrative edit leads the section, then two clean rows of three.
+   Seven items in a plain 3-column grid would strand the last one. */
+@media (min-width: 720px) {
+  .mg-item[data-feature] { grid-column: 1 / -1; }
 }
 
 /* ---------------------------------------------------------------
@@ -808,8 +856,7 @@ body.lb-locked { overflow: hidden; }
 }
 .mg-item:hover .mg-play { transform: translate(-50%, -50%) scale(1.09); background: rgba(10,10,11,0.76); }
 .mg-play svg { width: 18px; height: 18px; margin-left: 2px; display: block; }
-.mg-item span { z-index: 2; }
-.mg-item em {
+.mg-note {
   position: absolute;
   z-index: 2;
   left: 12px; bottom: 11px;
@@ -820,22 +867,15 @@ body.lb-locked { overflow: hidden; }
   text-transform: uppercase;
   color: rgba(255,255,255,0.62);
 }
-.mg-item.has-note span { bottom: 28px; }
+.mg-item.has-note .mg-title { bottom: 28px; }
 
 /* Landscape variant of the lightbox */
 .lb-inner.is-wide { width: min(980px, 100%); }
 .lb-frame.is-wide { aspect-ratio: 16 / 9; max-height: 70svh; }
 
-/* Fix: `.mg-item span` (0,1,1) out-specifies `.mg-play` (0,1,0), so the
-   title's left/bottom were positioning the play button. Scope it to beat
-   that rule and explicitly clear the inherited offsets. */
-.mg-item .mg-play {
-  left: 50%;
-  top: 50%;
-  right: auto;
-  bottom: auto;
-  transform: translate(-50%, -50%);
-}
+/* The title and note carry their own classes (.mg-title / .mg-note) so
+   nothing in here targets bare child elements. That is what lets a new
+   overlay be dropped into a tile without inheriting the title's offsets. */
 .mg-item:hover .mg-play { transform: translate(-50%, -50%) scale(1.09); }
 
 /* Motion grid sizing by count. `is-few` collapsed to a single column,

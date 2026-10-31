@@ -32,7 +32,9 @@
       "metric": "416",
       "metricLabel": "likes",
       "retention": "",
-      "hue": 300
+      "hue": 300,
+      "timelineId": "RAuWabCBAzM",
+      "timelineAspect": "16/9"
     },
     {
       "id": "c0b",
@@ -123,6 +125,16 @@
   ],
   "motion": [
     {
+      "id": "m0",
+      "title": "Japan vlog",
+      "note": "Vlog / montage",
+      "youtubeId": "isN59Rw1Gv8",
+      "timelineId": "P9AKky4UwbQ",
+      "timelineAspect": "9/16",
+      "feature": true,
+      "hue": 205
+    },
+    {
       "id": "m1",
       "title": "Lyric typography",
       "note": "Landscape",
@@ -211,11 +223,11 @@
   "clipsSection": {
     "eyebrow": "01 / Short-form vertical",
     "heading": "The work",
-    "sub": "Talking-head and long-form content cut down to vertical. Every tile says what it is and what it did."
+    "sub": "Talking-head and long-form content cut down to vertical. Every tile says what it is and what it did. A TIMELINE badge opens the Resolve project behind the cut."
   },
   "motionSection": {
     "eyebrow": "02 / Also",
-    "heading": "Motion graphics",
-    "sub": "Not the main offer. Here so you know the ceiling if your show needs titles, lower thirds or a sting."
+    "heading": "Landscape work",
+    "sub": "Not the main offer. Motion graphics if your show needs titles, lower thirds or a sting, plus a longer narrative edit to show the storytelling side."
   }
 }
