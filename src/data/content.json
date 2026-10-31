@@ -32,9 +32,7 @@
       "metric": "416",
       "metricLabel": "likes",
       "retention": "",
-      "hue": 300,
-      "timelineId": "RAuWabCBAzM",
-      "timelineAspect": "16/9"
+      "hue": 300
     },
     {
       "id": "c0b",
@@ -123,14 +121,34 @@
       "retention": ""
     }
   ],
+  "timelines": [
+    {
+      "id": "t1",
+      "title": "Rave event promo",
+      "note": "Client · RAW Manila",
+      "youtubeId": "RAuWabCBAzM",
+      "aspect": "16/9",
+      "arw": 16,
+      "arh": 9,
+      "hue": 320
+    },
+    {
+      "id": "t2",
+      "title": "Japan vlog",
+      "note": "Vlog · montage",
+      "youtubeId": "P9AKky4UwbQ",
+      "aspect": "9/16",
+      "arw": 9,
+      "arh": 16,
+      "hue": 205
+    }
+  ],
   "motion": [
     {
       "id": "m0",
       "title": "Japan vlog",
       "note": "Vlog / montage",
       "youtubeId": "isN59Rw1Gv8",
-      "timelineId": "P9AKky4UwbQ",
-      "timelineAspect": "9/16",
       "feature": true,
       "hue": 205
     },
@@ -223,10 +241,15 @@
   "clipsSection": {
     "eyebrow": "01 / Short-form vertical",
     "heading": "The work",
-    "sub": "Talking-head and long-form content cut down to vertical. Every tile says what it is and what it did. A TIMELINE badge opens the Resolve project behind the cut."
+    "sub": "Talking-head and long-form content cut down to vertical. Every tile says what it is and what it did."
+  },
+  "timelineSection": {
+    "eyebrow": "02 / Process",
+    "heading": "Timeline",
+    "sub": "The Resolve project behind the cut, screen recorded. Anyone can post a finished clip they did not make. This is the part that cannot be borrowed."
   },
   "motionSection": {
-    "eyebrow": "02 / Also",
+    "eyebrow": "03 / Also",
     "heading": "Landscape work",
     "sub": "Not the main offer. Motion graphics if your show needs titles, lower thirds or a sting, plus a longer narrative edit to show the storytelling side."
   }

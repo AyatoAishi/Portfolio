@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import content from '../data/content.json';
 
-const { name, role, hero, offer, about, tool, contact, clips, clipsSection, motion, motionSection } = content;
+const { name, role, hero, offer, about, tool, contact, clips, clipsSection,
+        timelines, timelineSection, motion, motionSection } = content;
 
 // Seeded, not Math.random(). Astro renders this once at build time, so a
 // real random would reshuffle the markup on every rebuild and churn the
@@ -183,19 +184,6 @@ const showAuthorNote = import.meta.env.DEV && (emptyCount > 0 || missingMetrics 
                 </span>
                 {c.kind === 'client' && <span class="client-chip">CLIENT</span>}
                 {c.kind === 'spec' && <span class="spec-chip">SPEC</span>}
-                {c.timelineId && (
-                  <span
-                    class="tl-badge"
-                    role="button"
-                    tabindex="0"
-                    data-yt={c.timelineId}
-                    data-aspect={c.timelineAspect}
-                    data-title={`${c.title} · Resolve timeline`}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="5" width="12" height="3" rx="1.5"/><rect x="3" y="10.5" width="18" height="3" rx="1.5"/><rect x="3" y="16" width="8" height="3" rx="1.5"/></svg>
-                    <b>TIMELINE</b>
-                  </span>
-                )}
               </>
             ) : (
               <>
@@ -250,6 +238,56 @@ const showAuthorNote = import.meta.env.DEV && (emptyCount > 0 || missingMetrics 
   </section>
 
   <!-- ============================================================
+       4b. TIMELINE - the Resolve project behind a cut. Proof of
+       authorship, which a finished export alone cannot give.
+       Each one keeps its own aspect and they are matched on height,
+       so a 16:9 and a 9:16 sit on one baseline instead of fighting.
+       ============================================================ -->
+  <section class="sec" id="timeline">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">{timelineSection.eyebrow}</p>
+        <h2>{timelineSection.heading}</h2>
+        <p>{timelineSection.sub}</p>
+      </div>
+
+      <div class="tl-row">
+        {timelines.map((t) => (
+          <article
+            class="tl-item"
+            style={`--h: ${t.hue}; --arw: ${t.arw}; --arh: ${t.arh}`}
+            tabindex="0"
+            role="button"
+            data-yt={t.youtubeId}
+            data-title={t.title}
+            data-aspect={t.aspect}
+          >
+            {/* A Short's maxresdefault is 16:9 with the frame pillarboxed
+                centre, so cover crops back to the original column. */}
+            <img
+              class="tl-poster"
+              src={`https://i.ytimg.com/vi/${t.youtubeId}/maxresdefault.jpg`}
+              alt={t.title}
+              loading="lazy"
+              decoding="async"
+              onerror={`this.onerror=null;this.src='https://i.ytimg.com/vi/${t.youtubeId}/hqdefault.jpg'`}
+            />
+            <span class="tl-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            </span>
+            <span class="tl-chip">TIMELINE</span>
+            <div class="tl-scrim"></div>
+            <div class="tl-meta">
+              <p class="tl-title">{t.title}</p>
+              <p class="tl-note">{t.note}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        5. MOTION - range, below the fold, visibly secondary.
        ============================================================ -->
   <section class="sec" id="motion">
@@ -290,19 +328,6 @@ const showAuthorNote = import.meta.env.DEV && (emptyCount > 0 || missingMetrics 
                   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                 </span>
                 <div class="mg-scrim"></div>
-                {m.timelineId && (
-                  <span
-                    class="tl-badge"
-                    role="button"
-                    tabindex="0"
-                    data-yt={m.timelineId}
-                    data-aspect={m.timelineAspect}
-                    data-title={`${m.title} · Resolve timeline`}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="5" width="12" height="3" rx="1.5"/><rect x="3" y="10.5" width="18" height="3" rx="1.5"/><rect x="3" y="16" width="8" height="3" rx="1.5"/></svg>
-                    <b>TIMELINE</b>
-                  </span>
-                )}
               </>
             )}
             <span class="mg-title">{m.title}</span>
@@ -366,6 +391,7 @@ const showAuthorNote = import.meta.env.DEV && (emptyCount > 0 || missingMetrics 
 
   <nav class="nav">
     <a href="#clips">Clips</a>
+    <a href="#timeline">Timeline</a>
     <a href="#motion">Motion</a>
     <a class="is-cta" href="#contact">Contact</a>
   </nav>

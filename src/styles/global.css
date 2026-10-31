@@ -441,50 +441,83 @@ a { color: inherit; }
   letter-spacing: -0.005em;
 }
 
-/* Timeline badge: evidence the cut is hers, sitting on the piece it
-   produced rather than as a tile of its own. A screen recording of a
-   Resolve timeline is not showreel material, but it is near impossible
-   to fake, which is the whole point of showing it. */
-.tl-badge {
-  position: absolute;
-  z-index: 3;
-  top: 9px; left: 9px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 9px 4px 6px;
-  border-radius: 999px;
-  /* Solid light, not another translucent dark pill. Every other overlay
-     here is dark, so on a dark poster this one simply disappeared. The
-     accent stays reserved for CLIENT, which has to outrank it. */
-  background: rgba(247,247,245,0.95);
-  border: 1px solid rgba(255,255,255,0.75);
-  color: var(--ink);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.45);
-  cursor: pointer;
-  transition: background .18s, transform .18s;
+/* ---------------------------------------------------------------
+   4b. TIMELINE - the Resolve project behind a cut.
+   The two pieces are different shapes, 16:9 and 9:16. Matching them
+   on WIDTH would leave one twice the height of the other, so they are
+   matched on HEIGHT and each takes the width its own ratio implies.
+   One baseline, honest proportions, no letterboxing.
+   --------------------------------------------------------------- */
+.tl-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 860px) {
+  .tl-row {
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    justify-content: start;
+    align-items: start;
+  }
+  .tl-item {
+    height: var(--tl-h);
+    width: calc(var(--tl-h) * var(--arw) / var(--arh));
+  }
 }
-/* The visible pill is only 21px tall. On a touch screen a near miss
-   opens the parent tile's video instead, which is a silent wrong answer,
-   so the tap target is padded out past the pill without moving it. */
-.tl-badge::after { content: ''; position: absolute; inset: -11px -9px; }
-.tl-badge svg { width: 12px; height: 12px; display: block; opacity: 0.9; }
-.tl-badge b {
+.tl-item {
+  --tl-h: 400px;
+  position: relative;
+  aspect-ratio: var(--arw) / var(--arh);
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  background:
+    radial-gradient(80% 120% at 25% 15%, hsl(var(--h) 45% 30% / .75), transparent 65%),
+    linear-gradient(180deg, var(--ink-3), var(--ink-2));
+}
+.tl-poster { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tl-play {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px; height: 50px;
+  border-radius: 999px;
+  display: grid; place-items: center;
+  background: rgba(10,10,11,0.58);
+  border: 1px solid rgba(255,255,255,0.28);
+  box-shadow: 0 2px 14px rgba(0,0,0,0.5);
+  color: #fff;
+  pointer-events: none;
+  transition: transform .22s cubic-bezier(.2,.7,.3,1), background .22s;
+}
+.tl-item:hover .tl-play { transform: translate(-50%, -50%) scale(1.09); background: rgba(10,10,11,0.76); }
+.tl-play svg { width: 18px; height: 18px; margin-left: 2px; display: block; }
+.tl-chip {
+  position: absolute;
+  top: 9px; left: 9px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: rgba(247,247,245,0.95);
+  color: var(--ink);
+}
+.tl-scrim {
+  position: absolute; inset: auto 0 0 0;
+  height: 48%;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.86));
+  pointer-events: none;
+}
+.tl-meta { position: absolute; left: 12px; right: 12px; bottom: 11px; }
+.tl-title { font-size: 13px; font-weight: 560; letter-spacing: -0.005em; margin: 0; }
+.tl-note {
   font-family: var(--mono);
   font-size: 9.5px;
-  font-weight: 700;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.62);
+  margin: 3px 0 0;
 }
-.tl-badge:hover,
-.tl-badge:focus-visible {
-  background: #fff;
-  transform: translateY(-1px);
-}
-
-/* A clip tile's top-left corner already holds CLIENT/SPEC, so the badge
-   stacks beneath it. */
-.tile .tl-badge { top: 33px; }
-
 
 /* One narrative edit leads the section, then two clean rows of three.
    Seven items in a plain 3-column grid would strand the last one. */
